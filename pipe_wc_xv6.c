@@ -18,10 +18,11 @@ int main(int argc, char *argv[]) {
     if (fork() == 0) {
         // Child process: set up pipe so that wc reads from it.
         close(p[1]);  // Close write end
-        dup(p[0], 0);
+        dup(p[0]);
         close(p[0]);
-        execl("wc", "wc", 0);
-        printf(2, "execl: failed to execute wc\n");
+        char *wc_args[] = {"wc", 0};
+        exec("wc", wc_args);
+        printf(2, "exec: failed to execute wc\n");
         exit();
     } else {
         // Parent process: read file and write its contents into the pipe.
