@@ -18,7 +18,8 @@ int main(int argc, char *argv[]) {
     if (fork() == 0) {
         // Child process: set up pipe so that wc reads from it.
         close(p[1]);  // Close write end
-        dup(p[0]);
+        close(0);  // Close standard input
+        dup(p[0]);  // Duplicate pipe read end to standard input
         close(p[0]);
         char *wc_args[] = {"wc", 0};
         exec("wc", wc_args);
